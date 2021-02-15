@@ -1,19 +1,3 @@
-/*
-  Web client
-
- This sketch connects to a website (http://www.google.com)
- using an Arduino Wiznet Ethernet shield.
-
- Circuit:
- * Ethernet shield attached to pins 10, 11, 12, 13
-
- created 18 Dec 2009
- by David A. Mellis
- modified 9 Apr 2012
- by Tom Igoe, based on work by Adrian McEwen
-
- */
-
 #include <SPI.h>
 #include <Ethernet.h>
 
@@ -23,8 +7,7 @@ byte mac[] = {0x90, 0xA2, 0xDA, 0x0F, 0x99, 0x1B };
 
 // if you don't want to use DNS (and reduce your sketch size)
 // use the numeric IP instead of the name for the server:
-IPAddress server(74,125,232,128);  // numeric IP for Google (no DNS)
-//char server[] = "www.google.com";    // name address for Google (using DNS)
+IPAddress server(192,168,0,106);  // numeric IP for Google (no DNS)
 
 // Set the static IP address to use if the DHCP fails to assign
 IPAddress ip(192, 168, 0, 177);
@@ -82,14 +65,14 @@ void setup() {
   Serial.println("...");
 
   // if you get a connection, report back via serial:
-  if (client.connect(server, 80)) {
+  if (client.connect(server, 3000)) {
     Serial.print("connected to ");
     Serial.println(client.remoteIP());
     // Make a HTTP request:
-    client.println("GET /search?q=arduino HTTP/1.1");
-    client.println("Host: www.google.com");
-    client.println("Connection: close");
-    client.println();
+    client.println("POST /stations/2/logs/ HTTP/1.1");
+    client.println("Host: 192.168.0.106");
+    client.println("Content-type: application/json");
+    client.println("data: {\"temperature\": \"22.8\",\"pressure\": \"833.20\",\"precipitation\": \"12\",\"humidity\": \"30\",\"gustofwind\": \"20.8\",\"windspeed\": \"15.7\",\"winddirection\": \"120\",\"solarincidence\": \"73\"}");
   } else {
     // if you didn't get a connection to the server:
     Serial.println("connection failed");
